@@ -59,4 +59,4 @@ jobs:
         with:
           app-name: 'slackblastf3'
           slot-name: 'production'
-          publish-profile: ${{ secrets.AzureAppService_PublishProfile_27cae23173174322816120898f810c60 }}
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile_1b7c3711185b451ebe8639257c9af83e }}
