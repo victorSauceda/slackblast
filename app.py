@@ -319,7 +319,6 @@ async def command(ack, body, respond, client, logger):
                             "type": "plain_text",
                             "text": "Tell us what happened\n\n"
                         }
-
                     },
                     "label": {
                         "type": "plain_text",
