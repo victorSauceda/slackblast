@@ -311,14 +311,14 @@ async def command(ack, body, respond, client, logger):
                     "type": "input",
                     "block_id": "moleskine",
                     "element": {
-                        "type": "plain_text_input",
+                        "type": "multi_users_select",
                         "multiline": True,
                         "action_id": "plain_text_input-action",
                         "initial_value": "WARMUP: \nTHE THANG: \nMARY: \nANNOUNCEMENTS: \nCOT: ",
                         "placeholder": {
                             "type": "plain_text",
                             "text": "Tell us what happened\n\n"
-                        }
+                        }, "action_id": "multi_users_select-action"
                     },
                     "label": {
                         "type": "plain_text",
