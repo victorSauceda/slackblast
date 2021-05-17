@@ -313,12 +313,12 @@ async def command(ack, body, respond, client, logger):
                     "element": {
                         "type": "multi_users_select",
                         "multiline": True,
-                        "action_id": "plain_text_input-action",
+                        "action_id": "multi_users_select-action",
                         "initial_value": "WARMUP: \nTHE THANG: \nMARY: \nANNOUNCEMENTS: \nCOT: ",
                         "placeholder": {
                             "type": "plain_text",
                             "text": "Tell us what happened\n\n"
-                        }, "action_id": "multi_users_select-action"
+                        },
                     },
                     "label": {
                         "type": "plain_text",
