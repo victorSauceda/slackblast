@@ -364,7 +364,7 @@ async def view_submission(ack, body, logger, client):
     pax = result["the_pax"]["multi_users_select-action"]["selected_users"]
     fngs = result["fngs"]["fng-action"]["value"]
     count = result["count"]["count-action"]["value"]
-    moleskine = result["moleskine"]["plain_text_input-action"]["value"]
+    moleskine = result["moleskine"]["multi_users_select-action"]["value"]
     destination = result["destination"]["destination-action"]["selected_option"]["value"]
     the_date = result["date"]["datepicker-action"]["selected_date"]
 
