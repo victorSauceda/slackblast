@@ -80,16 +80,18 @@ def get_channel_id_and_name(body, logger):
 async def command(ack, body, respond, client, logger):
     await ack()
     today = datetime.now(timezone.utc).astimezone()
-    today = today - timedelta(hours = 6)
+    today = today - timedelta(hours=6)
     datestring = today.strftime("%Y-%m-%d")
     user_id = body.get("user_id")
 
     # Figure out where user sent slashcommand from to set current channel id and name
     is_direct_message = body.get("channel_name") == 'directmessage'
-    current_channel_id = user_id if is_direct_message else body.get("channel_id")
-    current_channel_name = "Me" if is_direct_message else body.get("channel_id")
-    
-    # The channel where user submitted the slashcommand 
+    current_channel_id = user_id if is_direct_message else body.get(
+        "channel_id")
+    current_channel_name = "Me" if is_direct_message else body.get(
+        "channel_id")
+
+    # The channel where user submitted the slashcommand
     current_channel_option = {
         "text": {
             "type": "plain_text",
@@ -99,7 +101,7 @@ async def command(ack, body, respond, client, logger):
     }
 
     # In .env, CHANNEL=USER
-    channel_me_option =  {
+    channel_me_option = {
         "text": {
             "type": "plain_text",
             "text": "Me"
@@ -120,7 +122,7 @@ async def command(ack, body, respond, client, logger):
             "type": "plain_text",
             "text": "Preconfigured Backblast Channel"
         },
-        "value": config('CHANNEL', default=current_channel_id) 
+        "value": config('CHANNEL', default=current_channel_id)
     }
     # User may have typed /slackblast #<channel-name> AND
     # slackblast slashcommand is checked to escape channels.
@@ -129,8 +131,8 @@ async def command(ack, body, respond, client, logger):
     channel_id, channel_name = get_channel_id_and_name(body, logger)
     channel_user_specified_channel_option = {
         "text": {
-        "type": "plain_text",
-        "text": '# ' + channel_name
+            "type": "plain_text",
+            "text": '# ' + channel_name
         },
         "value": channel_id
     }
@@ -143,31 +145,31 @@ async def command(ack, body, respond, client, logger):
         channel_options.append(channel_user_specified_channel_option)
         channel_options.append(current_channel_option)
         channel_options.append(channel_me_option)
-        channel_options.append(channel_the_ao_option) 
+        channel_options.append(channel_the_ao_option)
         channel_options.append(channel_configured_ao_option)
     elif config('CHANNEL', default=current_channel_id) == 'USER':
         initial_channel_option = channel_me_option
         channel_options.append(channel_me_option)
         channel_options.append(current_channel_option)
-        channel_options.append(channel_the_ao_option) 
+        channel_options.append(channel_the_ao_option)
     elif config('CHANNEL', default=current_channel_id) == 'THE_AO':
         initial_channel_option = channel_the_ao_option
         channel_options.append(channel_the_ao_option)
-        channel_options.append(current_channel_option) 
+        channel_options.append(current_channel_option)
         channel_options.append(channel_me_option)
     elif config('CHANNEL', default=current_channel_id) == current_channel_id:
         # if there is no .env CHANNEL value, use default of current channel
         initial_channel_option = current_channel_option
         channel_options.append(current_channel_option)
         channel_options.append(channel_me_option)
-        channel_options.append(channel_the_ao_option) 
+        channel_options.append(channel_the_ao_option)
     else:
-        # Default to using the .env CHANNEL value which at this point must be a channel id 
+        # Default to using the .env CHANNEL value which at this point must be a channel id
         initial_channel_option = channel_configured_ao_option
         channel_options.append(channel_configured_ao_option)
         channel_options.append(current_channel_option)
         channel_options.append(channel_me_option)
-        channel_options.append(channel_the_ao_option) 
+        channel_options.append(channel_the_ao_option)
 
     res = await client.views_open(
         trigger_id=body["trigger_id"],
@@ -316,7 +318,8 @@ async def command(ack, body, respond, client, logger):
                         "placeholder": {
                             "type": "plain_text",
                             "text": "Tell us what happened\n\n"
-                        }
+                        },
+                        "action_id": "multi_users_select-action"
                     },
                     "label": {
                         "type": "plain_text",
@@ -337,12 +340,12 @@ async def command(ack, body, respond, client, logger):
                     "accessory": {
                         "action_id": "destination-action",
                         "type": "static_select",
-                    "placeholder": {
-                        "type": "plain_text",
-                        "text": "Choose where"
-                    },
-                    "initial_option": initial_channel_option,
-                    "options": channel_options
+                        "placeholder": {
+                            "type": "plain_text",
+                            "text": "Choose where"
+                        },
+                        "initial_option": initial_channel_option,
+                        "options": channel_options
                     }
                 }
             ]
@@ -362,8 +365,7 @@ async def view_submission(ack, body, logger, client):
     pax = result["the_pax"]["multi_users_select-action"]["selected_users"]
     fngs = result["fngs"]["fng-action"]["value"]
     count = result["count"]["count-action"]["value"]
-    moleskine = result["moleskine"]["plain_text_input-action"]["value"]
-    destination = result["destination"]["destination-action"]["selected_option"]["value"]
+    destination = result["destination"]["destination-action"]["multi_users_select-action"]["selected_option"]["value"]
     the_date = result["date"]["datepicker-action"]["selected_date"]
 
     pax_formatted = await get_pax(pax)
@@ -374,13 +376,14 @@ async def view_submission(ack, body, logger, client):
     if chan == 'THE_AO':
         chan = the_ao
 
-    logger.info('Channel to post to will be', chan, " Because the selected destination value was", destination, " while the selected AO in the modal was", the_ao)
+    logger.info('Channel to post to will be', chan, " Because the selected destination value was",
+                destination, " while the selected AO in the modal was", the_ao)
 
     msg = ""
     try:
         # formatting a message
         # todo: change to use json object
-        msg = f"*Slackblast*: " + \
+        msg = f"*Backblast*: " + \
             "\n*Title*: " + title + \
             "\n*Date*: " + date + \
             "\n*AO*: <#" + the_ao + ">" + \
@@ -422,7 +425,7 @@ app = FastAPI()
 
 @app.post("/slack/events")
 async def endpoint(req: Request):
-    logging.debug('[In app.post("/slack/events")]');
+    logging.debug('[In app.post("/slack/events")]')
     return await app_handler.handle(req)
 
 
