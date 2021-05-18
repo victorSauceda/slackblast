@@ -311,14 +311,14 @@ async def command(ack, body, respond, client, logger):
                     "type": "input",
                     "block_id": "moleskine",
                     "element": {
-                        "type": "multi_users_select",
+                        "type": "plain_text_input",
                         "multiline": True,
-                        "action_id": "multi_users_select-action",
+                        "action_id": "plain_text_input-action",
                         "initial_value": "WARMUP: \nTHE THANG: \nMARY: \nANNOUNCEMENTS: \nCOT: ",
                         "placeholder": {
                             "type": "plain_text",
                             "text": "Tell us what happened\n\n"
-                        },
+                        }
                     },
                     "label": {
                         "type": "plain_text",
@@ -364,7 +364,7 @@ async def view_submission(ack, body, logger, client):
     pax = result["the_pax"]["multi_users_select-action"]["selected_users"]
     fngs = result["fngs"]["fng-action"]["value"]
     count = result["count"]["count-action"]["value"]
-    moleskine = result["moleskine"]["multi_users_select-action"]["value"]
+    moleskine = result["moleskine"]["plain_text_input-action"]["value"]
     destination = result["destination"]["destination-action"]["selected_option"]["value"]
     the_date = result["date"]["datepicker-action"]["selected_date"]
 
