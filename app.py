@@ -343,7 +343,7 @@ async def command(ack, body, respond, client, logger):
                             "type": "plain_text",
                             "text": "Choose where"
                         },
-                        "initial_option": initial_channel_option,
+                        "initial_option": current_channel_id,
                         "options": channel_options
                     }
                 }
