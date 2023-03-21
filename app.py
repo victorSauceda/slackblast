@@ -204,6 +204,7 @@ async def command(ack, body, respond, client, logger):
                 {
                     "type": "input",
                     "block_id": "the_ao",
+                    "initial_channel": current_channel_id,
                     "element": {
                         "type": "channels_select",
                         "placeholder": {
